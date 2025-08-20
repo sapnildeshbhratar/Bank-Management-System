@@ -1,23 +1,23 @@
+#include "BST_Node.h"
 
-# include "BST_Node.h"
-
-BST_Node:: BST_Node()
+BST_Node::BST_Node()
 {
-	left = nullptr;
-	right = nullptr;
 	name = "";
-    adress = "";
-    account_number = 0;
-    password = 0;
-    balance = 0;
-}
-BST_Node:: BST_Node(string name, string adress, int accountno, int password, int balance)
-{
+	email = "";
+	account_number = 0;
+	password = "";
+	balance = 0.0;
 	left = nullptr;
 	right = nullptr;
-	this->name = name;
-	this->account_number = accountno;
-	this->adress = adress;
-	this->balance = balance;
-	this->password = password;
+}
+
+BST_Node::BST_Node(string n, string e, long long acc, string pass, double bal)
+{
+	name = n;
+	email = e;
+	account_number = acc;
+	password = pass;
+	balance = bal;
+	left = nullptr;
+	right = nullptr;
 }

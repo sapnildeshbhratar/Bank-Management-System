@@ -1,15 +1,15 @@
-
-# include "Node_1.h"
+#include "Node_1.h"
 
 Node_1::Node_1()
 {
-	next = nullptr;
 	accountNumber = 0;
-	password = 0;
-}
-Node_1::Node_1(int a, int p)
-{
+	password = "";
 	next = nullptr;
-	accountNumber = a;
-	password = p;
+}
+
+Node_1::Node_1(long long acc, std::string pass)
+{
+	accountNumber = acc;
+	password = pass;
+	next = nullptr;
 }

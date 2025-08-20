@@ -1,59 +1,86 @@
 #pragma once
-# include "BST_Tree.h"
-# include "Hashtable.h"
+#include "BST_Tree.h"
+#include <iostream>
+#include <cstdlib>
+
 void staff()
 {
 	BST_Tree t;
-	Hashtable h;
 	int condition = 0;
+
 	while (condition != 5)
 	{
-		cout << "welcome STAFF" << endl;
-		cout << "choose the following please" << endl;
-		cout << "press 1 to see transaction history  " << endl;
-		cout << "press 2 to transfer " << endl;
-		cout << "press 3 to withdraw " << endl;
-		cout << "press 4 to deposit " << endl;
-		cout << "press 5 to exit" << endl;
-		cin >> condition;
-		if (condition == 1)
-		{
-			// transaction file print karani ha account search kr k
-		}
-		if (condition == 2)
-		{
-			int senderaccountno = 0, amount = 0, recieveraccountno=0;
-			cout << "please enter  sender account number" << endl;
-			cin >> senderaccountno;
-			cout << "please enter  receiver account number" << endl;
-			cin >> recieveraccountno;
-			cout << "please enter amount" << endl;
-			cin >> amount;
-			t.transfer(senderaccountno,amount,recieveraccountno);
-		}
-		if (condition == 3)  // withdraw
-		{
-			int accountno = 0, amount = 0;
-			cout << "please enter account number" << endl;
-			cin >> accountno;
-			cout << "please enter amount" << endl;
-			cin >> amount;
-			t.withdraw(accountno, amount);
-		}
-		if (condition == 4)
-		{
-			int accountno = 0, amount = 0;
-			cout << "please enter account number" << endl;
-			cin >> accountno;
-			cout << "please enter amount" << endl;
-			cin >> amount;
-			t.deposit(accountno, amount);
-		}
-		if (condition == 5)
-		{
-			condition = 5;
-		}
+		system("cls"); // Clear screen
+		std::cout << "\n=== Staff Portal ===\n\n";
+		std::cout << "1. View Transaction History\n";
+		std::cout << "2. Transfer Money\n";
+		std::cout << "3. Withdraw Money\n";
+		std::cout << "4. Deposit Money\n";
+		std::cout << "5. Exit\n\n";
+		std::cout << "Enter your choice (1-5): ";
+		std::cin >> condition;
 
+		switch (condition)
+		{
+		case 1:
+		{
+			t.transaction_history();
+			std::cout << "\nPress any key to return to menu...";
+			system("pause > nul");
+			break;
+		}
+		case 2:
+		{
+			int sender, receiver, amount;
+			std::cout << "Enter sender's account number: ";
+			std::cin >> sender;
+			std::cout << "Enter receiver's account number: ";
+			std::cin >> receiver;
+			std::cout << "Enter amount to transfer: $";
+			std::cin >> amount;
+
+			t.transfer(sender, receiver, amount);
+			std::cout << "\nPress any key to return to menu...";
+			system("pause > nul");
+			break;
+		}
+		case 3:
+		{
+			int account, amount;
+			std::cout << "Enter account number: ";
+			std::cin >> account;
+			std::cout << "Enter amount to withdraw: $";
+			std::cin >> amount;
+
+			t.withdraw(account, amount);
+			std::cout << "\nPress any key to return to menu...";
+			system("pause > nul");
+			break;
+		}
+		case 4:
+		{
+			int account, amount;
+			std::cout << "Enter account number: ";
+			std::cin >> account;
+			std::cout << "Enter amount to deposit: $";
+			std::cin >> amount;
+
+			t.deposit(account, amount);
+			std::cout << "\nPress any key to return to menu...";
+			system("pause > nul");
+			break;
+		}
+		case 5:
+		{
+			std::cout << "\nLogging out of Staff Portal...\n";
+			break;
+		}
+		default:
+		{
+			std::cout << "\nInvalid choice! Please try again.\n";
+			std::cout << "Press any key to continue...";
+			system("pause > nul");
+		}
+		}
 	}
-
 }

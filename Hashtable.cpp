@@ -1,57 +1,55 @@
-# include <iostream>
-using namespace std;
-# include "Hashtable.h"
-# include <vector>
+#include "Hashtable.h"
+#include <iostream>
+#include <fstream>
+#include <vector>
 
-Hashtable:: Hashtable()
+void Hashtable::starthash()
 {
-	start = nullptr;
-}
-void Hashtable:: starthash()
-{
-	for (int i = 0; i < 12; i++)
+	for (int i = 0; i < tableSize; i++)
 	{
-		Node * temp1 = new Node(i);
+		Node *temp1 = new Node(i);
 		if (start == nullptr)
 		{
 			start = temp1;
 		}
 		else
 		{
-			Node * current = start;
-			while (current ->next != nullptr)
+			Node *current = start;
+			while (current->next != nullptr)
 			{
 				current = current->next;
 			}
 			current->next = temp1;
 		}
 	}
-	loadhashtable();
+	loadhashtable(); 
 }
 void Hashtable::add(int a, int p)
 {
 	static int i = 0;
 	ofstream write;
-	write.open("hashtable.txt",ios::app);
+	write.open("hashtable.txt", ios::app);
 	if (i != 0)
 	{
 		write << endl;
-		write << a << endl << p;
+		write << a << endl
+			  << p;
 	}
 	else
 	{
 		i++;
-		write << a << endl << p;
+		write << a << endl
+			  << p;
 	}
 	write.close();
 
 	starthash();
 }
-bool Hashtable::match(int a, int p)
+bool Hashtable::match(int a, std::string p) // Changed password parameter to string
 {
 	bool flag = false;
 	int r = a % 10;
-	Node * c = start;
+	Node *c = start;
 	while (c->data != r)
 	{
 		c = c->next;
@@ -68,84 +66,90 @@ bool Hashtable::match(int a, int p)
 	}
 	return flag;
 }
-void Hashtable:: display()
+void Hashtable::display()
 {
-	Node * current = start;
+	Node *current = start;
 	while (current != nullptr)
 	{
-		cout<<current->data<<endl;
+		cout << current->data << endl;
 		current = current->next;
 	}
 }
-void  Hashtable::loadhashtable()
+void Hashtable::loadhashtable()
 {
-	int acc = 0, r, pass;
+	long long acc;
+	std::string pass;
 
-	ifstream read;
-	read.open("hashtable.txt");
-	while (!read.eof())
+	std::ifstream read("hashtable.txt");
+	if (!read.is_open())
 	{
+		std::cout << "Error: Unable to open hashtable.txt\n";
+		return;
+	}
 
-		read >> acc;
-		read >> pass;
-		if (match(acc, pass))
-		{
-			continue;
-		}
-		if (acc!= -858993460 && pass!= -858993460)
-		{
-			r = acc % 10;
+	while (read >> acc >> pass)
+	{
+		int index = acc % tableSize;
+		Node_1 *newNode = new Node_1(acc, pass);
 
-			Node * c = start;
-			while (c->data != r)
-			{
-				c = c->next;
-			}
-			Node_1 *temp = new Node_1(acc, pass);
-			if (c->pre == nullptr)
-			{
-				c->pre = temp;
-			}
-			else
-			{
-				Node_1 *root;
-				root = c->pre;
-				while (root->next != nullptr)
-				{
-					root = root->next;
-				}
-				root->next = temp;
-			}
+		if (arr[index] == nullptr)
+		{
+			arr[index] = newNode;
 		}
 		else
 		{
-			cout << "NO password present" << endl;
+			Node_1 *temp = arr[index];
+			while (temp->next != nullptr)
+			{
+				temp = temp->next;
+			}
+			temp->next = newNode;
+		}
+
+		Node *current = start;
+		while (current != nullptr && current->data != (acc % 10))
+		{
+			current = current->next;
+		}
+		if (current != nullptr)
+		{
+			newNode->next = current->pre;
+			current->pre = newNode;
 		}
 	}
 	read.close();
 }
-void  Hashtable::displayPasswords()
+void Hashtable::displayPasswords()
 {
 	starthash();
+	if (start == nullptr)
+	{
+		std::cout << "No accounts found.\n";
+		return;
+	}
+
+	std::cout << "\n=== All Account Details ===\n\n";
 	Node *c = start;
 	while (c != nullptr)
 	{
 		Node_1 *c1 = c->pre;
 		while (c1 != nullptr)
 		{
-			cout<<c1->accountNumber<<endl;
-			cout<<c1->password<<endl<<endl;
+			std::cout << "Account Number: " << c1->accountNumber << "\n";
+			std::cout << "Password: " << c1->password << "\n";
+			std::cout << "------------------------\n";
 			c1 = c1->next;
 		}
 		c = c->next;
 	}
+	std::cout << "\nEnd of account list.\n";
 }
-void  Hashtable:: delete_password(int accountno)
+void Hashtable::delete_password(int accountno)
 {
 	ifstream read;
 	read.open("hashtable.txt");
-	vector <int> v;
-	int acc=0,pass=0;
+	vector<int> v;
+	int acc = 0, pass = 0;
 	int i = 0;
 	while (!read.eof())
 	{
@@ -153,7 +157,7 @@ void  Hashtable:: delete_password(int accountno)
 		read >> acc;
 		read >> pass;
 		if (acc == accountno)
-		{	                                           // read both account number and password to skip them
+		{ // read both account number and password to skip them
 			continue;
 		}
 		v.push_back(acc);
@@ -162,17 +166,43 @@ void  Hashtable:: delete_password(int accountno)
 	read.close();
 	ofstream write;
 	write.open("temp.txt", ios::app);
-	
-		for (int i = 0; i < v.size(); i++)
+
+	for (int i = 0; i < v.size(); i++)
+	{
+		if (v[i] != 0)
 		{
-			if (v[i] != 0)
-			{
-				write << v[i] << endl;
-			}
+			write << v[i] << endl;
 		}
-	
-	
+	}
+
 	write.close();
 	remove("hashtable.txt");
 	rename("temp.txt", "hashtable.txt");
+}
+void Hashtable::insert(long long acc, std::string password)
+{
+	int index = acc % tableSize;
+
+	Node_1 *newNode = new Node_1(acc, password);
+
+	if (arr[index] == nullptr)
+	{
+		arr[index] = newNode;
+	}
+	else
+	{
+		Node_1 *temp = arr[index];
+		while (temp->next != nullptr)
+		{
+			temp = temp->next;
+		}
+		temp->next = newNode;
+	}
+
+	std::ofstream outFile("hashtable.txt", std::ios::app);
+	if (outFile.is_open())
+	{
+		outFile << acc << " " << password << std::endl;
+		outFile.close();
+	}
 }

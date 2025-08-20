@@ -1,17 +1,31 @@
 #pragma once
-# include "Node.h"
-# include "Node_1.h"
+#include "Node.h"
+#include "Node_1.h"
+#include <string>
 
 class Hashtable
 {
+private:
+	static const int tableSize = 100;
+	Node *start;
+	Node_1 *arr[tableSize];
+
 public:
-	Node * start;
-	Hashtable();
+	Hashtable()
+	{
+		start = nullptr;
+		for (int i = 0; i < tableSize; i++)
+		{
+			arr[i] = nullptr;
+		}
+	}
+
 	void starthash();
-	void loadhashtable();
-	void add(int,int);
-	bool match(int,int);
+	void add(int a, int p);
+	bool match(int a, std::string p); 
 	void display();
+	void loadhashtable(); 
 	void displayPasswords();
-	void delete_password(int);
+	void delete_password(int accountno);
+	void insert(long long acc, std::string password);
 };
